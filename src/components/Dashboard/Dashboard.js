@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import { Chart } from "react-google-charts";
+import './Dashboard.css';
 
 /* import logo from './logo.svg';
 import './App.css';
  */
 function App() {
   const [options/* , setOptions */] = useState({
-    title: 'Acertos perguntas'
+    title: 'Acertos perguntas',
+    colors: ['#252d4a', '#555e7d', '#999ee1', '#7075b8'],
+    
   });
   const [optionsBar/* , setOptionsBar */] = useState({
-    title: 'E-mails Enviados'
+    title: 'E-mails Enviados',
+    colors: ['#252d4a', '#7075b8', '#999ee1', '#555e7d'],
+
   });
+
   const [data/* , setData */] = useState([
     ['Pergunta', 'Quantidade de Acertos'],
     ['Pergunta 1', 100],
@@ -20,7 +26,7 @@ function App() {
   ]);
   const [dataBar/* , setDataBar */] = useState([
     ['E-mails', '50', '10'],
-    ['Sucesso, Erros', 50, 10],
+    ['Sucesso, Erro', 50, 10],
 
   ])
   return (

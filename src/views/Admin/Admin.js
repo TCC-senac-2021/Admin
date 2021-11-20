@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import './Admin.css';
+import CsvDownloader from 'react-csv-downloader';
+import { VscCloudDownload } from "react-icons/vsc";
 import Dashboard from '../../components/Dashboard/Dashboard';
 import Table from '../../components/Table/Table';
+import logo from '../../assets/logo.png';
+import './Admin.css';
 
 function Admin() {
 
@@ -39,8 +42,8 @@ const body = [
 
 
 const columnsEmails = [
-  { path: "emailsucsses",   name: "Quantidade de E-mails enviados com sucesso" }, 
-  { path: "emailerror",   name: "Quantidade de E-mails enviados com erro" }, 
+  { path: "emailsucsses",   name: "Quantidade de e-mails enviados com sucesso" }, 
+  { path: "emailerror",   name: "Quantidade de e-mails enviados com erro" }, 
   
 ];
 
@@ -48,11 +51,50 @@ const bodyEmails = [
   { id: 1, emailsucsses: '50',  emailerror: '10' },
 ];
 
-  return (
+const names = body.map((body) => (
+  body.name)
+)
+const emails = body.map((body) => (
+  body.email)
+)
+const campains = body.map((body) => (
+  body.campain)
+)
+const hours = body.map((body) => (
+  body.hour)
+)
+const qtds = body.map((body) => (
+  body.qtd)
+)
+
+const dataCsv = [{
+    first: 'Nome',
+    second: names
+  }, 
+  {
+    first: 'E-mail', 
+    second: emails
+  },
+  {
+    first: 'Campanha', 
+    second: campains
+  },
+  {
+    first: 'Data', 
+    second: hours
+  },
+  {
+    first: 'Quantidade de Acertos', 
+    second: qtds
+  },
+];
+
+return (
     <div className="content">
+        <button className="fix"><img src={logo} alt="Logo" className="logo" /></button>
         { showElement ? (
             <form onSubmit={handleSubmit}>
-                <label>Camapnha</label>
+                <label>Campanha</label>
                 <input
                     autoFocus
                     type=""
@@ -68,15 +110,17 @@ const bodyEmails = [
                 />
                 <button className="btn" type="submit" disabled={!validateForm()}>Login</button>
             </form>
-        ) : ( <> 
+        ) : ( <>
         <div className="content-type">
           <Dashboard/>
           <Table id="1" columns={columnsEmails} body={bodyEmails} />
           <Table id="2" columns={columns} body={body} />
         </div>
+        <CsvDownloader className="download" datas={dataCsv} filename="converta_canpain" extension=".csv" separator=";"> Download.csv <VscCloudDownload /></CsvDownloader>
       </> )}
     </div>
   );
 }
 
 export default Admin;
+

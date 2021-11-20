@@ -9,6 +9,8 @@ color: #fff;
 border: 1px solid #ddd;
 background-color: #555e7d;
 padding: 8px;
+font-weight: 500;
+font-size: 14px;
 }
 
 .customers tr:nth-child(even){background-color: #555e7d;}
