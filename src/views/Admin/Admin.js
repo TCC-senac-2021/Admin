@@ -24,16 +24,17 @@ function Admin() {
 const columns = [
   { path: "id",   name: "id usuário" }, 
   { path: "name",   name: "Nome Usuário" }, 
+  { path: "email",   name: "E-mail" }, 
   { path: "campain", name: "Campanha" }, 
   { path: "hour", name: "Data" }, 
   { path: "qtd",  name: "Quantidade de Acertos" }, 
 ];
 
 const body = [
-  { id: 1, name: 'Kate',  campain: 'SenacReingresso', hour : '10/10/2020 05:35', qtd: '4' },
-  { id: 2, name: 'Tom',   campain: 'SenacReingresso', hour : '10/10/2020 05:35', qtd: '3' },
-  { id: 3, name: 'Ann',   campain: 'SenacReingresso', hour : '10/10/2020 05:35', qtd: '1' },
-  { id: 4, name: 'Jack',  campain: 'SenacReingresso', hour : '10/10/2020 05:35', qtd: '2' }
+  { id: 1, name: 'Kate',  email : 'teste@hotmail.com', campain: 'SenacReingresso', hour : '10/10/2020 05:35', qtd: '4' },
+  { id: 2, name: 'Tom',   email : 'teste@hotmail.com', campain: 'SenacReingresso', hour : '10/10/2020 05:35', qtd: '3' },
+  { id: 3, name: 'Ann',   email : 'teste@hotmail.com', campain: 'SenacReingresso', hour : '10/10/2020 05:35', qtd: '1' },
+  { id: 4, name: 'Jack',  email : 'teste@hotmail.com', campain: 'SenacReingresso', hour : '10/10/2020 05:35', qtd: '2' }
 ];
 
 
