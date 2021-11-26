@@ -25,8 +25,8 @@ function App() {
     ['Pergunta 4', 50],
   ]);
   const [dataBar/* , setDataBar */] = useState([
-    ['E-mails', '50', '10'],
-    ['Sucesso, Erro', 50, 10],
+    ['E-mails', '50', '0'],
+    ['', 50, 0],
 
   ])
   return (

@@ -17,6 +17,11 @@ label {
     margin-top: 5px;
 }
 
+text {
+    color: #454545;
+    font-weight: 500;
+}
+
 .btn {
     color: #ffffff;
     background-color: #252d4a;
@@ -45,3 +50,32 @@ label {
     border: 1px solid #555e7d;
     border-radius: 5px;
 }
+
+.customers {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+}
+    
+.customers td, .customers th {
+    border: 1px solid #ddd;
+    background-color: #555e7d;
+    padding: 8px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.customers tr:nth-child(even){ background-color: #555e7d; }
+
+.customers tr:hover { background-color: #9999e1; }
+
+.customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #252d4a;
+    color: white;
+    text-align: center;
+}
+    
