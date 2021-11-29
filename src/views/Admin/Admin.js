@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CsvDownloader from 'react-csv-downloader';
+import Loader from 'react-loader-spinner';
 import { VscCloudDownload } from "react-icons/vsc";
 import { Chart } from "react-google-charts";
 import logo from '../../assets/logo.png';
@@ -10,8 +11,10 @@ function Admin() {
 
   const [campain, setCampain] = useState("");
   const [showElement, setShowElement] = useState(true);
+  const [loader, setLoader ] = useState(true);
   const [dataEnter, setDataEnter] = useState([]);
   const [dataEmails, setDataEmails] = useState([]);
+  const [dataUsers, setDataUsers] = useState([]);
   const [dataAwnserOne, setDataAwserOne ] = useState(0);
   const [dataAwnserTwo, setDataAwserTwo ] = useState(0);
   const [dataAwnserTree, setDataAwserTree ] = useState(0);
@@ -20,20 +23,20 @@ function Admin() {
   const [options] = useState({
     title: 'Acertos perguntas',
     colors: ['#252d4a', '#555e7d', '#999ee1', '#7075b8'],
-    
   });
 
   const [optionsBar] = useState({
     title: 'E-mails',
     colors: ['#252d4a', '#7075b8', '#999ee1', '#555e7d'],
-
   });
 
   const columns = [
+    { path: "name",   name: "ID" }, 
     { path: "name",   name: "Nome Usuário" }, 
     { path: "email",   name: "E-mail" }, 
     { path: "campain", name: "Campanha" }, 
     { path: "hour", name: "Data" }, 
+    { path: "coupon",  name: "Cupom ganho" }, 
     { path: "qtd",  name: "Quantidade de Acertos" }, 
   ];
 
@@ -43,60 +46,95 @@ function Admin() {
     
   ];
 
-  const names = dataEnter.map((names) => (
+  const ids = dataUsers.map((ids) => (
+    ids.id)
+  )
+  const names = dataUsers.map((names) => (
     names.nome)
+  )
+  const emails = dataUsers.map((emails) => (
+    emails.email)
+  )
+  const hours = dataUsers.map((hours) => (
+    hours.horarioemailenviado.split('T', 1).join(' ') )
+  )
+
+  const coupons = dataUsers.map((coupons) => (
+    coupons.cupomGanho)
+  )
+  const qtds = dataUsers.map((qtds) => (
+    qtds.acertos)
   )
 
   const dataCsv = [{
+      first: 'ID',
+      second: ids,
+    },{
       first: 'Nome',
-      second: names
+      second: names,
+    },{
+      first: 'E-mail',
+      second: emails,
+    },{
+      first: 'Campanha',
+      second: campain,
+    },{
+      first: 'Data',
+      second: hours,
+    },{
+      first: 'Cupom Ganho',
+      second: coupons,
+    },{
+      first: 'Acertos',
+      second: qtds,
+    },{
+      first: 'Quantidade de e-mails Enviados',
+      second: dataEmails.length,
   }]; 
 
+
+  async function loading() {
+      await Api.get(`/dadosEntrada/${campain}`,{
+      }).then(response => {
+        setDataEnter(response.data)
+      })
+      await Api.get(`/dadosUsuarios/${campain}`,{
+      }).then(response => {
+        setDataUsers(response.data)
+      })
+      await Api.get(`/dadosEnvioEmail/${campain}`,{
+      }).then(response => {
+        setDataEmails(response.data)
+      })
+      await Api.get(`/dadosNumeroAcertosPorPergunta/${campain}/1`,{
+      }).then(response => {
+        setDataAwserOne(response.data.acertos)
+      })
+      await Api.get(`/dadosNumeroAcertosPorPergunta/${campain}/2`,{
+      }).then(response => {
+        setDataAwserTwo(response.data.acertos)
+      })
+      await Api.get(`/dadosNumeroAcertosPorPergunta/${campain}/3`,{
+      }).then(response => {
+        setDataAwserTree(response.data.acertos)
+      })
+      await Api.get(`/dadosNumeroAcertosPorPergunta/${campain}/4`,{
+      }).then(response => {
+        setDataAwserFour(response.data.acertos)
+      })
+    setLoader(false); 
+  }
+  
+  
   function validateForm() {
     return campain === 'ShopBlackFriday2021';
   }
-  
+
   function handleSubmit(event) {
     event.preventDefault();
     setShowElement(false);
-    loadEnter();
-    loadAwnsers();
-    loadEmail();
+    loading();
   }
-
-  async function loadEnter(){
-    await Api.get(`/dadosEntrada/${campain}`,{
-    }).then(response => {
-      setDataEnter(response.data)
-    })
-  }
-
-  async function loadEmail(){
-    await Api.get(`/dadosEnvioEmail/${campain}`,{
-    }).then(response => {
-      setDataEmails(response.data)
-    })
-  }
-
-  async function loadAwnsers(){
-    await Api.get(`/dadosNumeroAcertosPorPergunta/${campain}/1`,{
-    }).then(response => {
-      setDataAwserOne(response.data.acertos)
-    })
-    await Api.get(`/dadosNumeroAcertosPorPergunta/${campain}/2`,{
-    }).then(response => {
-      setDataAwserTwo(response.data.acertos)
-    })
-    await Api.get(`/dadosNumeroAcertosPorPergunta/${campain}/3`,{
-    }).then(response => {
-      setDataAwserTree(response.data.acertos)
-    })
-    await Api.get(`/dadosNumeroAcertosPorPergunta/${campain}/4`,{
-    }).then(response => {
-      setDataAwserFour(response.data.acertos)
-    })
-  }
-
 
 return (
     <div className="content">
@@ -113,7 +151,8 @@ return (
                 <button className="btn" type="submit" disabled={!validateForm()}>Login</button>
             </form>
         ) : ( <>
-         {/*  charts */}    
+        { loader ? (  <Loader type="Circles" height={150} width={150}/>
+			     ) : ( <>   
           <div className="content-type">
             <div className="App">
               <header className="App-header">
@@ -143,9 +182,9 @@ return (
                   />
                 </div>
               </header>
-          </div>
-          {/*  tbale e-mails */}          
-          <table className='customers'>
+            </div>
+
+            <table className='customers'>
               <tbody>
                 <tr>
                   {columnsEmails.map(({ path, name }) => (
@@ -162,7 +201,7 @@ return (
                 </tr>
               </tbody>
             </table>
-            {/*  tbale peoples */}    
+              
             <table className='customers'>
               <tbody>
                 <tr>
@@ -170,34 +209,37 @@ return (
                     <th key={path}>{name}</th>
                   ))}
                 </tr>
-                { dataEnter.map((data, index) => (    
-                    <>
-                    <tr key={index} >
-                       <td key={data}>
+                { dataUsers.map((data, index) => (    
+                      <tr key={index} >
+                          <td>
+                          {data.id}
+                          </td>
+                          <td>
                           {data.nome}
-                        </td>
-                        <td key={data} >
-                        {data.email}
-                        </td>
-                        <td key={data} >
-                        0
-                        </td>
-                        <td key={data} >
-                        0
-                        </td>
-                        <td key={data} >
-                        0
-                        </td>
-                    </tr>
-                    </>
-                  
+                          </td>
+                          <td >
+                          {data.email}
+                          </td>
+                          <td >
+                          {campain}
+                          </td>
+                          <td >
+                            { data.horarioemailenviado.split('T', 1).join(' ') }
+                          </td>
+                          <td >
+                          {data.cupomGanho ? data.cupomGanho : 'Ainda Não jogou'}
+                          </td>
+                          <td >
+                          {data.acertos}
+                          </td>
+                      </tr>
                   ))
                 } 
               </tbody>
             </table>
-            </div>
-       
+          </div>
         <CsvDownloader className="download" datas={dataCsv} filename="converta_canpain" extension=".csv" separator=";"> Download.csv <VscCloudDownload /></CsvDownloader>
+          </> )}
       </> )}
     </div>
   );
