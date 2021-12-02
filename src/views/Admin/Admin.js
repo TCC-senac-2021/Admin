@@ -31,18 +31,17 @@ function Admin() {
   });
 
   const columns = [
-    { path: "name",   name: "ID" }, 
     { path: "name",   name: "Nome Usuário" }, 
     { path: "email",   name: "E-mail" }, 
     { path: "campain", name: "Campanha" }, 
     { path: "hour", name: "Data" }, 
-    { path: "coupon",  name: "Cupom ganho" }, 
+    { path: "coupon",  name: "Cupom Ganho" }, 
     { path: "qtd",  name: "Quantidade de Acertos" }, 
   ];
 
   const columnsEmails = [
     { path: "emailsucsses",   name: "Quantidade de e-mails enviados" }, 
-    { path: "emailview",      name: "Quantidade de e-mails vizualizados" }, 
+    { path: "emailview",      name: "Quantidade de vezes que entraram no link do jogo" }, 
     
   ];
 
@@ -96,14 +95,17 @@ function Admin() {
   async function loading() {
       await Api.get(`/dadosEntrada/${campain}`,{
       }).then(response => {
+        console.log(response.data)
         setDataEnter(response.data)
       })
       await Api.get(`/dadosUsuarios/${campain}`,{
       }).then(response => {
+        console.log(response.data)
         setDataUsers(response.data)
       })
       await Api.get(`/dadosEnvioEmail/${campain}`,{
       }).then(response => {
+        console.log(response.data)
         setDataEmails(response.data)
       })
       await Api.get(`/dadosNumeroAcertosPorPergunta/${campain}/1`,{
@@ -136,6 +138,10 @@ function Admin() {
     loading();
   }
 
+  function refreshPage() {
+    window.location.reload(false);
+  }
+
 return (
     <div className="content">
         <button className="fix"><img src={logo} alt="Logo" className="logo" /></button>
@@ -153,6 +159,7 @@ return (
         ) : ( <>
         { loader ? (  <Loader type="Circles" height={150} width={150}/>
 			     ) : ( <>   
+          <button className="logout" onClick={refreshPage}>Sair</button>
           <div className="content-type">
             <div className="App">
               <header className="App-header">
@@ -203,17 +210,15 @@ return (
             </table>
               
             <table className='customers'>
-              <tbody>
+              <tbody title="table-users">
                 <tr>
                   {columns.map(({ path, name }) => (
                     <th key={path}>{name}</th>
                   ))}
                 </tr>
                 { dataUsers.map((data, index) => (    
+                  data.id !== 25 &&
                       <tr key={index} >
-                          <td>
-                          {data.id}
-                          </td>
                           <td>
                           {data.nome}
                           </td>
@@ -227,7 +232,7 @@ return (
                             { data.horarioemailenviado.split('T', 1).join(' ') }
                           </td>
                           <td >
-                          {data.cupomGanho ? data.cupomGanho : 'Ainda Não jogou'}
+                          {data.cupomGanho ? data.cupomGanho.toUpperCase() : 'Ainda Não jogou'}
                           </td>
                           <td >
                           {data.acertos}
